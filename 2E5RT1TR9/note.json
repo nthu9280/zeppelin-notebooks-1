@@ -1,0 +1,70 @@
+{
+  "paragraphs": [
+    {
+      "text": "%jdbc(hive)\nshow databases",
+      "user": "anonymous",
+      "dateUpdated": "Feb 24, 2019 7:35:36 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "database_name\ndefault\nfoodmart\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1551034819248_-2057130889",
+      "id": "20190224-190019_871085302",
+      "dateCreated": "Feb 24, 2019 7:00:19 PM",
+      "dateStarted": "Feb 24, 2019 7:35:36 PM",
+      "dateFinished": "Feb 24, 2019 7:35:40 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%jdbc\n",
+      "user": "anonymous",
+      "dateUpdated": "Feb 24, 2019 7:32:27 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1551036747326_-1061429740",
+      "id": "20190224-193227_351604315",
+      "dateCreated": "Feb 24, 2019 7:32:27 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "test",
+  "id": "2E5RT1TR9",
+  "angularObjects": {
+    "2CHS8UYQQ:shared_process": [],
+    "2C8A4SZ9T_livy2:shared_process": [],
+    "2CK8A9MEG:shared_process": [],
+    "2C4U48MY3_spark2:shared_process": [],
+    "2CKAY1A8Y:shared_process": [],
+    "2CKEKWY8Z:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

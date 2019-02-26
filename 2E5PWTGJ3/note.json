@@ -1,0 +1,282 @@
+{
+  "paragraphs": [
+    {
+      "text": "// Imports\nimport org.apache.spark.sql.functions._\nimport org.joda.time.format.DateTimeFormat\n\n// Load data\nval inputPath \u003d  \"/Users/joris/Development/workspace/blog/zeppelin/data/*\"\nval airTraffic \u003d sqlContext.read\n        .format(\"com.databricks.spark.csv\")\n        .option(\"header\", \"true\") // Use first line of all files as header\n        .option(\"delimiter\", \",\")\n        .option(\"inferSchema\", \"true\") // Automatically infer data types\n        .load(inputPath)\n\n// Add extra features\nval calcDayOfYear \u003d udf(\n    (dayOfMonth: Int, month: Int, year: Int) \u003d\u003e { \n        val dateFormat \u003d DateTimeFormat.forPattern(\"dd/MM/yyyy\")\n        dateFormat.parseDateTime(s\"$dayOfMonth/$month/$year\").getDayOfYear()\n    }\n)\nval calcRoute \u003d udf(\n    (origin: String, dest: String) \u003d\u003e s\"$origin - $dest\"    \n)\nval calcHourOfArrival \u003d udf(\n    (arrTime: String) \u003d\u003e arrTime.slice(0,arrTime.size-2)\n)\nval featuredTraffic \u003d airTraffic\n    .withColumn(\"DayOfYear\", calcDayOfYear(airTraffic(\"DayOfMonth\"), airTraffic(\"Month\"), airTraffic(\"Year\")))\n    .withColumn(\"HourOfArr\", calcHourOfArrival(airTraffic(\"ArrTime\")))\n    .withColumn(\"Route\", calcRoute(airTraffic(\"Origin\"), airTraffic(\"Dest\")))\n    \n// Register as Spark SQL Table\nfeaturedTraffic.registerTempTable(\"air_traffic\")\n// sqlContext.cacheTable(\"air_traffic\")",
+      "dateUpdated": "Feb 26, 2019 12:14:07 AM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions._\nimport org.joda.time.format.DateTimeFormat\ninputPath: String \u003d /Users/joris/Development/workspace/blog/zeppelin/dataTemp/*\nairTraffic: org.apache.spark.sql.DataFrame \u003d [Year: int, Month: int, DayofMonth: int, DayOfWeek: int, DepTime: string, CRSDepTime: int, ArrTime: string, CRSArrTime: int, UniqueCarrier: string, FlightNum: int, TailNum: string, ActualElapsedTime: string, CRSElapsedTime: string, AirTime: string, ArrDelay: string, DepDelay: string, Origin: string, Dest: string, Distance: int, TaxiIn: int, TaxiOut: int, Cancelled: int, CancellationCode: string, Diverted: int, CarrierDelay: string, WeatherDelay: string, NASDelay: string, SecurityDelay: string, LateAircraftDelay: string]\nwarning: Class org.joda.convert.FromString not found - continuing with a stub.\nwarning: Class org.joda.convert.ToString not found - continuing with a stub.\nwarning: Class org.joda.convert.ToString not found - continuing with a stub.\nwarning: Class org.joda.convert.FromString not found - continuing with a stub.\nwarning: Class org.joda.convert.ToString not found - continuing with a stub.\nwarning: Class org.joda.convert.FromString not found - continuing with a stub.\nwarning: Class org.joda.convert.FromString not found - continuing with a stub.\ncalcDayOfYear: org.apache.spark.sql.UserDefinedFunction \u003d UserDefinedFunction(\u003cfunction3\u003e,IntegerType,List(IntegerType, IntegerType, IntegerType))\ncalcRoute: org.apache.spark.sql.UserDefinedFunction \u003d UserDefinedFunction(\u003cfunction2\u003e,StringType,List(StringType, StringType))\ncalcHourOfArrival: org.apache.spark.sql.UserDefinedFunction \u003d UserDefinedFunction(\u003cfunction1\u003e,StringType,List(StringType))\nfeaturedTraffic: org.apache.spark.sql.DataFrame \u003d [Year: int, Month: int, DayofMonth: int, DayOfWeek: int, DepTime: string, CRSDepTime: int, ArrTime: string, CRSArrTime: int, UniqueCarrier: string, FlightNum: int, TailNum: string, ActualElapsedTime: string, CRSElapsedTime: string, AirTime: string, ArrDelay: string, DepDelay: string, Origin: string, Dest: string, Distance: int, TaxiIn: int, TaxiOut: int, Cancelled: int, CancellationCode: string, Diverted: int, CarrierDelay: string, WeatherDelay: string, NASDelay: string, SecurityDelay: string, LateAircraftDelay: string, DayOfYear: int, HourOfArr: string, Route: string]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1551140047088_129114034",
+      "id": "20160727-121027_1276565716",
+      "dateCreated": "Feb 26, 2019 12:14:07 AM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect DayOfYear, count(*) as NrOfFlights, avg(DepDelay) as AvgDepDelay, avg(ArrDelay) as AvgArrDelay from air_traffic group by DayOfYear having NrOfFlights \u003e 100000",
+      "dateUpdated": "Feb 26, 2019 12:14:07 AM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1551140047089_128729286",
+      "id": "20160802-142508_1232010435",
+      "dateCreated": "Feb 26, 2019 12:14:07 AM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect HourOfArr, count(*) as NrFlights, avg(ArrDelay) as AvgArrDelay from air_traffic where DayOfWeek \u003d ${day\u003d1,1(Monday)|2(Tuesday)|3(Wednesday)|4(Thursday)|5(Friday)|6(Saturday)|7(Sunday)} and Origin \u003d \"${org\u003dATL,ATL|PHX|PIT}\" group by HourOfArr ",
+      "dateUpdated": "Feb 26, 2019 12:14:07 AM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": false,
+              "keys": [
+                {
+                  "name": "HourOfArr",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "NrFlights",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "scatter": {
+                "yAxis": {
+                  "name": "NrFlights",
+                  "index": 1.0,
+                  "aggr": "sum"
+                },
+                "xAxis": {
+                  "name": "HourOfArr",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              }
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {
+          "table_name": "table1",
+          "test": "",
+          "Route": "MKE - PIT",
+          "day": "2",
+          "org": "PHX"
+        },
+        "forms": {
+          "org": {
+            "name": "org",
+            "defaultValue": "ATL",
+            "options": [
+              {
+                "value": "ATL"
+              },
+              {
+                "value": "PHX"
+              },
+              {
+                "value": "PIT"
+              }
+            ],
+            "hidden": false
+          },
+          "day": {
+            "name": "day",
+            "defaultValue": "1",
+            "options": [
+              {
+                "value": "1",
+                "displayName": "Monday"
+              },
+              {
+                "value": "2",
+                "displayName": "Tuesday"
+              },
+              {
+                "value": "3",
+                "displayName": "Wednesday"
+              },
+              {
+                "value": "4",
+                "displayName": "Thursday"
+              },
+              {
+                "value": "5",
+                "displayName": "Friday"
+              },
+              {
+                "value": "6",
+                "displayName": "Saturday"
+              },
+              {
+                "value": "7",
+                "displayName": "Sunday"
+              }
+            ],
+            "hidden": false
+          }
+        }
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "HourOfArr\tNrFlights\tAvgArrDelay\n1\t293\t38.89761092150171\n2\t50\t107.36\n3\t15\t174.66666666666666\n4\t45\t-1.3111111111111111\n5\t286\t-4.905594405594406\n6\t441\t-1.7346938775510203\n7\t410\t5.160975609756098\n8\t1023\t0.45650048875855326\n9\t1093\t4.014638609332113\n10\t1006\t6.639165009940358\n11\t1169\t4.059024807527802\n12\t1632\t9.41421568627451\n13\t1557\t8.299293513166345\n14\t1717\t8.374490390215492\n15\t1408\t12.919034090909092\n16\t2076\t10.483622350674374\n17\t1684\t13.878859857482185\n18\t1593\t14.195229127432517\n19\t1821\t10.953322350356947\n20\t1938\t15.032507739938081\n21\t1843\t15.011937059142703\n22\t1812\t15.643487858719647\n23\t1043\t23.540747842761267\n24\t13\t13.076923076923077\n\t1626\t23.819383259911895\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1551140047090_129883532",
+      "id": "20160730-013042_1642780896",
+      "dateCreated": "Feb 26, 2019 12:14:07 AM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimport matplotlib\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\nimport StringIO\ndef show(p):\n  img \u003d StringIO.StringIO()\n  p.savefig(img, format\u003d\u0027svg\u0027)\n  img.seek(0)\n  print \"%html \" + img.buf\n\ndf \u003d sqlContext.sql(\"SELECT Dest, Month, count(*) as NrOfFlights, avg(ArrDelay) as AvgArrDelay FROM air_traffic group by Dest, Month\")\ndata \u003d df.toPandas()\n\nvalue \u003d \"AvgArrDelay\"\nx \u003d \"Dest\"\ngrouping \u003d [\"Month\"]\n\nheatmap_data \u003d data.pivot_table(values\u003dvalue, index\u003dx, columns\u003dgrouping)\nheatmap_data \u003d heatmap_data[0:100]\n\na4_dims \u003d (len(heatmap_data.columns),50)\nfig, ax \u003d plt.subplots(figsize\u003da4_dims)\nax.set_title(\"Avg Arrival Delay\")\nsns.heatmap(heatmap_data, ax\u003dax, annot\u003dTrue, fmt\u003d\".02f\")\n\nshow(plt)",
+      "dateUpdated": "Feb 26, 2019 12:14:07 AM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1551140047091_129498783",
+      "id": "20160801-135424_1924414339",
+      "dateCreated": "Feb 26, 2019 12:14:07 AM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfrom wordcloud import WordCloud\n\nimport StringIO\ndef show(p):\n  img \u003d StringIO.StringIO()\n  p.savefig(img, format\u003d\u0027svg\u0027)\n  img.seek(0)\n  print \"%html \" + img.buf\n\n# Create route frequencies\nroutes \u003d sqlContext.sql(\"SELECT Route, count(*) as Count FROM air_traffic GROUP BY Route\").collect()\nroute_freq \u003d [(x[0],x[1]) for x in routes]\n\n# Generate word cloud image\nwordcloud \u003d WordCloud().generate_from_frequencies(route_freq)\nimage \u003d wordcloud.to_image()\nimage.show()",
+      "dateUpdated": "Feb 26, 2019 12:14:07 AM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "results": [],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1551140047091_129498783",
+      "id": "20160801-162253_422942970",
+      "dateCreated": "Feb 26, 2019 12:14:07 AM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "dateUpdated": "Feb 26, 2019 12:14:07 AM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1551140047092_127575039",
+      "id": "20160801-152118_27353719",
+      "dateCreated": "Feb 26, 2019 12:14:07 AM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Other/air_traffic",
+  "id": "2E5PWTGJ3",
+  "angularObjects": {
+    "2CHS8UYQQ:shared_process": [],
+    "2C8A4SZ9T_livy2:shared_process": [],
+    "2E4K1WW2S:shared_process": [],
+    "2CK8A9MEG:shared_process": [],
+    "2C4U48MY3_spark2:shared_process": [],
+    "2CKAY1A8Y:shared_process": [],
+    "2CKEKWY8Z:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

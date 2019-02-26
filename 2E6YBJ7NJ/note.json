@@ -1,0 +1,106 @@
+{
+  "paragraphs": [
+    {
+      "text": "%oracle\n\nselect * from customers",
+      "user": "anonymous",
+      "dateUpdated": "Feb 26, 2019 1:33:53 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "CUST_ID\tCUST_FIRST_NAME\tCUST_LAST_NAME\tCUST_GENDER\tCUST_YEAR_OF_BIRTH\tCUST_MARITAL_STATUS\tCUST_STREET_ADDRESS\tCUST_POSTAL_CODE\tCUST_CITY\tCUST_CITY_ID\tCUST_STATE_PROVINCE\tCUST_STATE_PROVINCE_ID\tCOUNTRY_ID\tCUST_MAIN_PHONE_NUMBER\tCUST_INCOME_LEVEL\tCUST_CREDIT_LIMIT\tCUST_EMAIL\tCUST_TOTAL\tCUST_TOTAL_ID\tCUST_SRC_ID\tCUST_EFF_FROM\tCUST_EFF_TO\tCUST_VALID\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1551188021598_-219517943",
+      "id": "20190226-133341_1037871869",
+      "dateCreated": "Feb 26, 2019 1:33:41 PM",
+      "dateStarted": "Feb 26, 2019 1:33:53 PM",
+      "dateFinished": "Feb 26, 2019 1:33:55 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%jdbc(hive)\n\nselect  * from tab1",
+      "user": "anonymous",
+      "dateUpdated": "Feb 26, 2019 1:36:01 PM",
+      "config": {
+        "colWidth": 12.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "tab1.col1\ttab1.col2\n1\tsammy\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1551188033207_1086335148",
+      "id": "20190226-133353_1019067334",
+      "dateCreated": "Feb 26, 2019 1:33:53 PM",
+      "dateStarted": "Feb 26, 2019 1:36:01 PM",
+      "dateFinished": "Feb 26, 2019 1:36:01 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "anonymous",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1551188161234_-283604088",
+      "id": "20190226-133601_1204269585",
+      "dateCreated": "Feb 26, 2019 1:36:01 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "FinalDemo/jdbc",
+  "id": "2E6YBJ7NJ",
+  "angularObjects": {
+    "2CHS8UYQQ:shared_process": [],
+    "2C8A4SZ9T_livy2:shared_process": [],
+    "2E72V3YQ3:shared_process": [],
+    "2E4K1WW2S:shared_process": [],
+    "2CK8A9MEG:shared_process": [],
+    "2C4U48MY3_spark2:shared_process": [],
+    "2CKAY1A8Y:shared_process": [],
+    "2CKEKWY8Z:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
